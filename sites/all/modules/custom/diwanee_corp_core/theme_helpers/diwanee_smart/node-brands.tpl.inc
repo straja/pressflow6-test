@@ -1,0 +1,35 @@
+<?php
+/**
+ * Preprocess variables for node-brands.tpl.php
+ */
+function diwanee_smart_node_brands_preprocess(&$vars) {
+
+  $vars['body'] = $vars['node']->content['body']['#value'];
+
+  // Handle user defined Thumb image
+  if (isset($vars['field_brandsteaserthumbimage'][0]['filepath'])) {
+    if ($vars['field_brandsteaserthumbimage'][0]['data']['alt']) {
+      $alt = $vars['field_brandsteaserthumbimage'][0]['data']['alt'];
+    }
+    else {
+      $alt = $vars['node']->title;     
+    }
+    if ($vars['field_brandsteaserthumbimage'][0]['data']['title']) {
+      $title = $vars['field_brandsteaserthumbimage'][0]['data']['title'];
+    }
+    else {
+      $title = $vars['node']->title;     
+    }
+    $vars['thumb_image'] = theme('imagecache', '400x400', $vars['field_brandsteaserthumbimage'][0]['filepath'], $alt, $title );
+  }   
+  
+  // Handle user defined Teaser text 
+  if (empty($vars['field_teaser_body'][0]['value'])) { 
+    $vars['teaser_text'] = diwanee_corp_core_trim_text( $vars['node']->content['body']['#value'], 114, $chr = '...');    
+  }
+  else { 
+    $vars['teaser_text'] = diwanee_corp_core_trim_text( $vars['field_teaser_body'][0]['value'], 144, $chr = '...'); 
+  } 
+  
+}
+

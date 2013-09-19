@@ -1,0 +1,23 @@
+; $Id$
+name = Diwanee
+description = My Blueprint Subtheme
+core = 6.x
+engine = phptemplate
+
+; Let's enable some features
+features[] = logo
+features[] = site_navigation
+
+regions[header] = Header
+regions[left] = Left sidebar
+regions[content] = Content
+regions[right] = Right sidebar
+regions[footer] = Footer
+
+; Style
+stylesheets[screen,projection][] = css/style.css
+
+; Panels layouts.
+plugins[panels][layouts] = layouts
+
+base theme = blueprint

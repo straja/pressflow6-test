@@ -1,0 +1,8 @@
+<?php
+
+/**
+* hook_install implementation
+*/
+function inv_core_install() {
+    // All done
+}

@@ -1,0 +1,18 @@
+<?php
+
+/**
+* hook_init implementation
+**/
+function diwanee_corp_core_init() {
+   // execute router for various theme preprocessors.
+   $router_file = dirname(__FILE__) . '/theme_helpers/router.inc';
+   if (file_exists($router_file)) {
+      require_once($router_file);
+   }
+   
+  // execute router for various theme preprocessors.
+  $lib_file = dirname(__FILE__) . '/diwanee_corp_core.lib.inc';
+   if (file_exists($lib_file)) {  
+      require_once($lib_file);
+   }  
+}

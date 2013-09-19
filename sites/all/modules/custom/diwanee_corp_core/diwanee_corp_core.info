@@ -1,0 +1,4 @@
+name = Diwane Corp. Site Corre Module 
+package = "Diwanee"
+description = "Provides core functionality and helpers..."
+core = 6.x

@@ -1,0 +1,15 @@
+; $Id$
+; Name and core are required; all else is optional.
+name = Diwanee
+description = My Blueprint Subtheme
+core = 6.x
+engine = phptemplate
+
+regions[header] = Header
+regions[left] = Left sidebar
+regions[content] = Content
+regions[footer] = Footer
+
+stylesheets[screen,projection][] = css/style.css
+
+base theme = blueprint
