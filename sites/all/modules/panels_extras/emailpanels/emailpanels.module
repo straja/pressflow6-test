@@ -1,0 +1,56 @@
+<?php
+// $Id$ emailpanels.module,v 1.0 2011/01/28 16:50:48 chriscalip Exp $
+
+/**
+ * Implementation of hook_ctools_plugin_directory() to let the system know
+ * where our task and task_handler plugins are.
+ */
+function emailpanels_ctools_plugin_directory($owner, $plugin_type) {
+  $allowed_owners = array('ctools', 'page_manager');
+  if (!in_array($owner, $allowed_owners)) {
+    return;
+  }
+  $allowed_plugin_types = array('content_types', 'tasks');
+  if (!in_array($plugin_type, $allowed_plugin_types)) {
+    return;
+  }  
+  return "plugins/$plugin_type";
+}
+
+/**
+ * The contact form page.
+ */
+function emailpanels_mail_page($nid, $field_name) {
+  $output = t('Contact Form Not Found');
+  if (!is_numeric($nid)) {
+    return $output;
+  }
+  if (module_exists('content_permissions')) {
+    if (!user_access('view '. $field_name)) {
+      return $output;
+    }
+  }
+  $node = node_load(intval($nid));
+  if (!$node) {
+    return $output;
+  }
+  $field = $node->$field_name;
+  $email = $field[0]['email'];
+  $types = content_types($node->type);
+  // Validate field name
+  $types = content_types($node->type);
+  if (empty($email) ||
+      !isset($types['fields'][$field_name]) ) {
+    return $output;
+  }
+
+
+  if (!flood_is_allowed('email', variable_get('email_hourly_threshold', 3))) {
+    $output = t("You cannot send more than %number messages per hour. Please try again later.", array('%number' => variable_get('email_hourly_threshold', 3)));
+  }
+  else {
+    $output = drupal_get_form('email_mail_page_form', $node, $field_name, $email);
+  }
+
+  return $output;
+}

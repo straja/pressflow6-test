@@ -1,0 +1,18 @@
+<?php
+// $Id$ configurable_breadcrumbs.module,v 1.0 2011/01/28 16:50:48 chriscalip Exp $
+
+/**
+ * Implementation of hook_ctools_plugin_directory() to let the system know
+ * where our task and task_handler plugins are.
+ */
+function configurable_breadcrumbs_ctools_plugin_directory($owner, $plugin_type) {
+  $allowed_owners = array('ctools', 'page_manager');
+  if (!in_array($owner, $allowed_owners)) {
+    return;
+  }
+  $allowed_plugin_types = array('content_types');
+  if (!in_array($plugin_type, $allowed_plugin_types)) {
+    return;
+  }  
+  return "plugins/$plugin_type";
+}

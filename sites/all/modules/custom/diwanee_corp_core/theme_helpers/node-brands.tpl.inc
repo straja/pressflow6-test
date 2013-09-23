@@ -47,6 +47,23 @@ function diwanee_node_brands_preprocess(&$vars) {
     $vars['thumb_logo'] = theme('imagecache', 'brandlogos', $vars['field_logo'][0]['filepath'], $alt, $title );
   }
   
+  // Handle header image
+  if (isset($vars['field_image'][0]['filepath'])) {
+    if ($vars['field_image'][0]['data']['alt']) {
+      $alt = $vars['field_image'][0]['data']['alt'];
+    }
+    else {
+      $alt = $vars['node']->title;     
+    }
+    if ($vars['field_image'][0]['data']['title']) {
+      $title = $vars['field_image'][0]['data']['title'];
+    }
+    else {
+      $title = $vars['node']->title;     
+    }
+    $vars['head_image'] = theme('imagecache', 'headbrandimages', $vars['field_image'][0]['filepath'], $alt, $title );
+  }
+  
   // Set breadcrumbs for content of some brand
   if($vars['build_mode'] == 'brand_full'){
     $breadcrumb = drupal_get_breadcrumb();

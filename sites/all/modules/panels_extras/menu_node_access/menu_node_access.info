@@ -1,0 +1,12 @@
+; $Id: menu_node_access.info,v 1.1 2011/08/01 18:39:48 chriscalip Exp $
+name = Menu Node Access 
+description = Add a node selection rule "Node : Belongs to a Menu"
+dependencies[] = panels
+package = panels extras
+core = 6.x
+; Information added by drupal.org packaging script on 2011-08-10
+version = "6.x-1.9"
+core = "6.x"
+project = "panels_extras"
+datestamp = "1312952219"
+

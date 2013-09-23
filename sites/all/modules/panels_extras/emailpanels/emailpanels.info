@@ -1,0 +1,14 @@
+; $Id: emailpanels.info,v 1.0 2011/01/28 16:50:48 chriscalip Exp $
+name = Email CCK Field and Panels 3 Integration
+description = Enables ability of panels 3 to handle the email field contact form page and make the email field form available as a content type
+dependencies[] = email
+dependencies[] = panels
+package = panels extras
+core = 6.x
+
+; Information added by drupal.org packaging script on 2011-08-10
+version = "6.x-1.9"
+core = "6.x"
+project = "panels_extras"
+datestamp = "1312952219"
+

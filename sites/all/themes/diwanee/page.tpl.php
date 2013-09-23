@@ -21,70 +21,67 @@
 
 <body class="<?php print $body_classes; ?>">
 
-<div class="container">
-  <div id="header">
-      <?php if ($title): ?>
-        <div id="logo" class="site_title">
-          <?php print $logo_block; ?>
-        </div>
-      <?php else: ?>
-        <h1 id="logo">
-          <?php print $logo_block; ?>
-        </h1>
-      <?php endif; ?>
-     
-    <?php if (isset($superfish_menu)) : ?>
-      <div class="span-24"><?php print $superfish_menu ?></div>
-    <?php endif; ?> 
-      
-    <?php print $header; ?>
-    <?php if (isset($primary_links)) : ?>
-      <?php print theme('links', $primary_links, array('id' => 'nav', 'class' => 'links primary-links')) ?>
-    <?php endif; ?>
-    <?php if (isset($secondary_links)) : ?>
-      <?php print theme('links', $secondary_links, array('id' => 'nav', 'class' => 'links secondary-links')) ?>
-    <?php endif; ?>
-  </div>
+<div id="header">
+    <div class="container">
+        <?php if ($title): ?>
+          <div id="logo" class="site_title">
+            <?php print $logo_block; ?>
+          </div>
+        <?php else: ?>
+          <h1 id="logo">
+            <?php print $logo_block; ?>
+          </h1>
+        <?php endif; ?>
 
+        <?php if (isset($superfish_menu)) : ?>
+        <div class="span-24"><?php print $superfish_menu ?></div>
+        <?php endif; ?> 
+
+        <?php print $header; ?>
+        <?php if (isset($primary_links)) : ?>
+        <?php print theme('links', $primary_links, array('id' => 'nav', 'class' => 'links primary-links')) ?>
+        <?php endif; ?>
+        <?php if (isset($secondary_links)) : ?>
+        <?php print theme('links', $secondary_links, array('id' => 'nav', 'class' => 'links secondary-links')) ?>
+        <?php endif; ?>
+    </div>
+</div>
+    
+<div class="container">
+
+  <!--
   <?php if ($left): ?>
     <div class="<?php print $left_classes; ?>"><?php print $left; ?></div>
-  <?php endif ?>
-
+  <?php endif; ?>
+  -->
   <div class="<?php print $center_classes; ?>">
     <?php
+      /*
       if ($breadcrumb != '') {
          print $breadcrumb;
       }
+       * 
+       */
 
       if ($tabs != '') {
         print '<div class="tabs">'. $tabs .'</div>';
       }
-
+      /*
       if ($messages != '') {
         print '<div id="messages">'. $messages .'</div>';
       }
-
+      /*
       if ($title != '') {
         print '<h1>'. $title .'</h1>';
       }
+       * 
+       */
 
       print $help; // Drupal already wraps this one in a class
 
       print $content;
       print $feed_icons;
     ?>
-
-    <?php if ($footer_message || $footer): ?>
-      <div id="footer" class="clear">
-        <?php if ($footer): ?>
-          <?php print $footer; ?>
-        <?php endif; ?>
-        <?php if ($footer_message): ?>
-          <div id="footer-message"><?php print $footer_message; ?></div>
-        <?php endif; ?>
-      </div>
-    <?php endif; ?>
-  </div>
 
   <?php if ($right): ?>
     <div class="<?php print $right_classes; ?>"><?php print $right; ?></div>
@@ -93,7 +90,18 @@
   <?php print $scripts ?>
   <?php print $closure; ?>
 
+  </div>
 </div>
+<?php if ($footer_message || $footer): ?>
+  <div id="footer" class="clear">
+        <?php if ($footer): ?>
+          <?php print $footer; ?>
+        <?php endif; ?>
+        <?php if ($footer_message): ?>
+          <div id="footer-message"><?php print $footer_message; ?></div>
+        <?php endif; ?>
+  </div>
+<?php endif; ?>
 
 </body>
 </html>

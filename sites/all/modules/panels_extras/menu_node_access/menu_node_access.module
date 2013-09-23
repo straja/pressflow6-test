@@ -1,0 +1,61 @@
+<?php
+// $Id$ menu_node_access.module,v 1.1 2011/03/02 11:58:48 chriscalip Exp $
+/**
+ * @file menu_node_access.module
+ * Add a node selection rule "Node : Belongs to a Menu"
+ */
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function menu_node_access_ctools_plugin_directory($owner, $plugin_type) {
+  $allowed_owners = array('ctools', 'page_manager');
+  if (!in_array($owner, $allowed_owners)) {
+    return;
+  }
+  $allowed_plugin_types = array('access');
+  if (!in_array($plugin_type, $allowed_plugin_types)) {
+    return;
+  }  
+  return "plugins/$plugin_type";  
+}
+
+/**
+ * Implements hook_nodeapi().
+ */
+function menu_node_access_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  $watch = array('load');
+
+  // Do we care about this node?
+  if (!in_array($op, $watch)) {
+    return;
+  }
+  // On delete operations, the menu item may be deleted before this
+  // runs, so ensure we have the data.
+  if ($op == 'load') {
+    // Ensure the menu object is loaded.
+    $node->menu_node_access_items = menu_node_access_get_links($node->nid);
+  }
+}
+
+/**
+ * Get the relevant menu links for a node.
+ * @param $nid
+ *   The node id.
+ * @param $router
+ *   Boolean flag indicating whether to attach the menu router item to the $item object.
+ *   If set to TRUE, the router will be set as $item->menu_router.
+ * @return
+ *   An array of complete menu_link objects or an empy array on failure.
+ */
+function menu_node_access_get_links($nid, $router = FALSE) {
+  $result = db_query("SELECT * FROM {menu_links} WHERE link_path = '%s'", 'node/'. $nid);
+  $items = array();
+  while ($data = db_fetch_object($result)) {
+    if ($router) {
+      $data->menu_router = menu_get_item('node/'. $nid);
+    }
+    $items[$data->mlid] = $data;
+  }
+  return $items;
+}

@@ -1,0 +1,13 @@
+; $Id: configurable_breadcrumbs.info,v 1.0 2011/01/28 16:50:48 chriscalip Exp $
+name = Configurable Breadcrumbs for Panels 
+description = Gives an additional content type configurable breadcrumb; options to set title at the end of the breadcrumb
+dependencies[] = panels
+package = panels extras
+core = 6.x
+
+; Information added by drupal.org packaging script on 2011-08-10
+version = "6.x-1.9"
+core = "6.x"
+project = "panels_extras"
+datestamp = "1312952219"
+

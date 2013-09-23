@@ -1,0 +1,14 @@
+CHANGELOG for Panels Extras 1.0 for Drupal 6
+Panels 6.x-1.9 (09-Aug-2011)
+#1244448 by chriscalip jason.bell osopolar : ADD documentation for each module d6 version
+#1244568 by chriscalip : Content Types provided by panels extras with the exception of menu_seo_title should be in Panels Extras category.
+#1244622 by chriscalip : Remove Email module restriction that you have to deal with the display settings.
+
+Panels 6.x-1.6 (01-Aug-2011)
+#1235988 by chriscalip : removed menu_node as a requirement for menu_node_access per #1236242
+
+Panels 6.x-1.5 (01-Aug-2011)
+=====================
+
+#1236172 by chriscalip: clean up code to reflect hook_ctools_plugin_directory
+#1235988 by chriscalip: Added Module: menu_node_access Node Being Viewed: Belongs to a Selected Menu <Node Selection Rule>

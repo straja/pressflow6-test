@@ -1,0 +1,15 @@
+; $Id: menu_seo_title.info,v 1.1 2011/03/02 11:58:48 chriscalip Exp $
+name = Menu Seo Title
+description = Add a menu block that uses the menu attribute seo title instead of the normal menu item title
+dependencies[] = menu_attributes
+dependencies[] = menu_block
+dependencies[] = panels
+package = panels extras
+core = 6.x
+
+; Information added by drupal.org packaging script on 2011-08-10
+version = "6.x-1.9"
+core = "6.x"
+project = "panels_extras"
+datestamp = "1312952219"
+

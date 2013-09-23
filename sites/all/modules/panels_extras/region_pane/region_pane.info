@@ -1,0 +1,12 @@
+; $Id: region_pane.info,v 1.0 2011/03/17 16:50:48 chriscalip Exp $
+name = Region Based Panes for Panels 
+description = Gives an additional content type region_pane with its content being specific Drupal block regions
+dependencies[] = panels
+package = panels extras
+core = 6.x
+; Information added by drupal.org packaging script on 2011-08-10
+version = "6.x-1.9"
+core = "6.x"
+project = "panels_extras"
+datestamp = "1312952219"
+

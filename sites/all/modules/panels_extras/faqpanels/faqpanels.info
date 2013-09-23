@@ -1,0 +1,14 @@
+; $Id: faqpanels.info,v 1.0 2011/02/07 11:20:07 chriscalip Exp $
+name = FAQ and Panels 3 Integration
+description = Enables ability of panels 3 to handle the faq page and make the faq page available as a content type
+dependencies[] = faq
+dependencies[] = panels
+package = panels extras
+core = 6.x
+
+; Information added by drupal.org packaging script on 2011-08-10
+version = "6.x-1.9"
+core = "6.x"
+project = "panels_extras"
+datestamp = "1312952219"
+
