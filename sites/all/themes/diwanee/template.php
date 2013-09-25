@@ -8,6 +8,9 @@ if (theme_get_setting('blueprint_animated_submit')) {
   drupal_add_js(drupal_get_path('theme', 'blueprint') .'/scripts/submit_animated.js');
 }
 
+// Adding script.js file for diwanee theme
+drupal_add_js(drupal_get_path('theme', 'diwanee') .'/scripts/script.js');
+
 /**
  * Implements HOOK_theme().
  */
@@ -67,6 +70,7 @@ function diwanee_preprocess_page(&$vars) {
     
     $vars['superfish_menu'] = module_invoke('superfish', 'block', 'view', 1);
     $vars['superfish_menu'] = $vars['superfish_menu']['content'];
+    
   }
 
 

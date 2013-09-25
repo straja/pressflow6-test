@@ -35,19 +35,20 @@
 
         <?php if (isset($superfish_menu)) : ?>
         <div class="span-24"><?php print $superfish_menu ?></div>
-        <?php endif; ?> 
-
+        <?php endif; ?>
+   </div>
+    <div class="slider">
         <?php print $header; ?>
+    </div>
         <?php if (isset($primary_links)) : ?>
         <?php print theme('links', $primary_links, array('id' => 'nav', 'class' => 'links primary-links')) ?>
         <?php endif; ?>
         <?php if (isset($secondary_links)) : ?>
         <?php print theme('links', $secondary_links, array('id' => 'nav', 'class' => 'links secondary-links')) ?>
         <?php endif; ?>
-    </div>
 </div>
     
-<div class="container">
+<div id="main" class="container">
 
   <!--
   <?php if ($left): ?>
@@ -77,7 +78,7 @@
        * 
        */
 
-      print $help; // Drupal already wraps this one in a class
+      //print $help; // Drupal already wraps this one in a class
 
       print $content;
       print $feed_icons;

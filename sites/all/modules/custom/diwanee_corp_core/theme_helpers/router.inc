@@ -16,7 +16,6 @@ function diwanee_smart_preprocess(&$vars, $hook) {
  * Checks for preprocessor files based on node type and includes them if available.
  */
 function diwanee_suggest_preprocessor(&$vars, $hook) {
-  print_r($vars['type']);
   if ($hook == 'page_header' || $hook == 'page_footer') {
     unset($vars['page_vars']['template_files']);    
     if (is_array($vars['page_vars'])) {

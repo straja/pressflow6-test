@@ -64,6 +64,31 @@ function diwanee_node_brands_preprocess(&$vars) {
     $vars['head_image'] = theme('imagecache', 'headbrandimages', $vars['field_image'][0]['filepath'], $alt, $title );
   }
   
+  // Handle media kit
+  if (empty($vars['field_mediakit'][0]['value'])) { 
+    $vars['mediakit'] = null;    
+  }
+  else { 
+    $vars['mediakit'] = $vars['field_mediakit'][0]['value']; 
+  }
+  
+  // Handle summary text in overview
+  if (empty($vars['field_summary'][0]['value'])) { 
+    $vars['summary'] = null;    
+  }
+  else { 
+    $vars['summary'] = $vars['field_summary'][0]['value']; 
+  }
+  
+  // Handle user defined Teaser text 
+  if (empty($vars['field_website'][0]['url'])) { 
+    $vars['website'] = null;    
+  }
+  else { 
+    $vars['website']['url'] = $vars['field_website'][0]['url']; 
+    $vars['website']['title'] = $vars['field_website'][0]['title']; 
+  }
+  
   // Set breadcrumbs for content of some brand
   if($vars['build_mode'] == 'brand_full'){
     $breadcrumb = drupal_get_breadcrumb();
