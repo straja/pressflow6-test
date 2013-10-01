@@ -14,7 +14,7 @@ body {
 }
 
 div.container {
-    margin-top: -212px;
+    margin-top: -236px;
     margin-bottom: 0;
     background: #fff;
     width: 980px;
@@ -97,7 +97,7 @@ a.redlink:hover {
 
 /* Brand Image Teaser */
 .brand-image-teaser .thumb-text {
-    min-height: 80px;
+    min-height: 90px;
 }
 
 .brand-image-teaser .thumb {
@@ -107,7 +107,7 @@ a.redlink:hover {
 }
 
 .brand-image-teaser {
-    margin-bottom: 25px;
+    height: 395px;
 }
 
 .brand-image-teaser .title {
@@ -411,3 +411,59 @@ a {cursor:pointer;}
     display: none;
 }
 /* end ofFinal fix */
+
+/* Slider */
+.view-slider.view-id-slider .view-content { 
+    position: absolute; 
+    width:1280px; 
+    height:526px; 
+    overflow:hidden;  
+}
+.view-slider.view-id-slider { 
+    position:relative; 
+    margin: 0 auto; 
+    max-width:1280px; 
+    max-height:526px; 
+    min-height: 526px;
+    min-width: 1280px;
+    overflow: hidden;
+}
+.view-slider.view-id-slider .views-row { 
+    float:left; 
+    position:relative; 
+    top:0px;
+    left:0px; 
+}
+    
+.control {
+    position:absolute; 
+    top: 380px; 
+    color:#fff; 
+    cursor:pointer; 
+    color: #000;
+}
+.prevSlide { 
+    left:120px; 
+    top: -420px; 
+    background: url('../img/slider-left.png') no-repeat; 
+    width: 50px; 
+    height: 100px; 
+}
+.nextSlide { 
+    left:1133px; 
+    top: -420px; 
+    background: url('../img/slider-right.png') no-repeat; 
+    width: 50px; 
+    height: 100px; 
+}
+
+#block-block-5 {
+    position: relative;
+    width: 1280px;
+    margin: 0 auto;
+}
+#block-block-5 h3 {
+    display: none;
+}
+
+/* end of Slider */
