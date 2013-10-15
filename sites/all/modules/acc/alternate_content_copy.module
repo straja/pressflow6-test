@@ -1,0 +1,280 @@
+<?php
+
+// Author: Vincenzo Russo (v@neminis.org)
+
+/**
+ *  Implementation of the hook_form_alter()
+ */
+function alternate_content_copy_form_alter(&$form, $form_state, $form_id) {
+  if ($form_id == 'content_copy_import_form') {
+    // altering the prefix
+    $form['#prefix'] = t('This form allows to import either a full content type or just new fields. When an entire content type is imported, if this does not exist in the installation, it will be created. On the contrary, if it does exist, it will be replaced with the new version. Finally, when just fields are imported, this will be added to the content type selected as destination (note that fields cannot be duplicated within the same content type, so imported fields will be added only if they do not already exist in the selected type).');
+
+    // altering the "Content type" dropdown box
+    $form['type_name']['#title'] = t('Import process');
+    unset($form['type_name']['#options']['<create>']);
+    $form['type_name']['#options'] = array(
+        '<create>' => t('Import the entire content type'),
+        t('Import new fields into') => $form['type_name']['#options'],
+    );
+    $form['type_name']['#description'] = t('Select the import process to perform.');
+
+    // altering the submit handler
+    $form['#submit'] = array('alternate_content_copy_import_form_submit');
+  }
+}
+
+/**
+ *  Alternate submit handler for content_copy import form.
+ *
+ *  Allows to import either a full content type or just new fields. When an entire
+ *  content type is imported, if this does not exist in the installation, it will be
+ *  created. On the contrary, if it does exist, it will be replaced with the new version.
+ *  Finally, when just fields are imported, this will be added to the content type
+ *  selected as destination (note that fields cannot be duplicated within the same
+ *  content type, so imported fields will be added only if they do not already exist
+ *  in the selected type).
+ */
+function alternate_content_copy_import_form_submit($form, &$form_state) {
+  $form_values = $form_state['values'];
+
+  // Get the content type we are importing into.
+  $type_name = $form_values['type_name'];
+  $type_label = node_get_types('name', $type_name);
+
+  $content = NULL;
+  // Convert the import formatted text back into a $content array.
+  // Return if errors generated or not an array.
+  // Use '@' to suppress errors about undefined constants in the macro.
+  @eval($form_values['macro']);
+
+  // Preliminary error trapping, must have valid arrays to work with.
+  if (!isset($content) || !isset($content['type']) || !is_array($content) || !is_array($content['type'])) {
+    form_set_error('macro', t('The import data is not valid import text.'));
+    return;
+  }
+
+  module_load_include('inc', 'content', 'includes/content.crud');
+
+  // Get all type and field info for this database.
+  $content_info = _content_type_info();
+
+  $imported_type = $content['type'];
+  $imported_type_name = $imported_type['type'];
+  $imported_type_label = $imported_type['name'];
+
+  // It is allowed to import a type with no fields,
+  // so the fields array could be empty and must be cast as an array.
+  $imported_fields = isset($content['fields']) ? $content['fields'] : array();
+
+  // Perform more pre-import error trapping.
+  // If there are potential problems, exit without doing the import.
+  $not_enabled = array();
+
+  // The groups array could be empty and still valid, make sure to cast it as an array.
+  // If there are groups in the import, make sure the fieldgroup module is enabled.
+  $imported_groups = array();
+  if (isset($content['groups']) && module_exists('fieldgroup')) {
+    $imported_groups = (array) $content['groups'];
+  }
+  elseif (isset($content['groups']) && is_array($content['groups'])) {
+    $not_enabled[] = 'fieldgroup';
+  }
+
+  // Make sure that all the field and widget modules in the import are enabled in this database.
+  foreach ($imported_fields as $import) {
+    $field = content_field_instance_collapse($import);
+    if (empty($field['module']) || empty($field['widget_module'])) {
+      $not_enabled[] = $field['field_name'];
+    }
+    else {
+      if (!module_exists($field['module'])) {
+        $not_enabled[] = $field['module'];
+      }
+      if (!module_exists($field['widget_module'])) {
+        $not_enabled[] = $field['widget_module'];
+      }
+    }
+  }
+
+  // If any required module is not enabled, set an error message and exit.
+  if ($not_enabled) {
+    form_set_error('macro', t('The following modules must be enabled for this import to work: %modules.', array(
+        '%modules' => implode(', ', array_unique($not_enabled))
+        )));
+  }
+
+  // we are importing an entire content type to create it in the system
+  $import_type = 'import_create';
+
+  // check if we are actually creating or updating the whole content type
+  if ($form_values['type_name'] == '<create>') {
+    if (in_array($imported_type_name, array_keys($content_info['content types']))) {
+      // we are importing an entire content type to update it in the system
+      $import_type = 'import_update';
+      $type_name = $imported_type_name;
+      $type_label = $imported_type_label;
+    }
+  }
+  // or if we are just importing new fields to an existing content type
+  else {
+    // we are importing just fields to be added to an existing content type
+    $import_type = 'import_fields';
+  }
+
+  // if so far we have encountered errors, abort the process and exit.
+  if (form_get_errors()) {
+    drupal_set_message(t('Exiting. No import performed.'), 'error');
+    return;
+  }
+
+  // Create or update the content type, if requested.
+  if ($import_type != 'import_fields') {
+
+    $type = (object) $imported_type;
+    $values = $imported_type;
+    // Prevent a warning in node/content_types.inc
+    $type->has_title = TRUE;
+    $type_form_state = array('values' => $values);
+
+    // There's no API for creating node types, we still have to use drupal_execute().
+    module_load_include('inc', 'node', 'includes/content_types');
+    drupal_execute('node_type_form', $type_form_state, $type);
+
+    // Reset type and database values once new type has been added.
+    $type_name  = $imported_type_name;
+    $type_label = node_get_types('name', $type_name);
+    content_clear_type_cache();
+    $content_info = _content_type_info();
+
+    if (form_get_errors() || !isset($content_info['content types']) || !is_array($content_info['content types'][$type_name])) {
+       drupal_set_message(t('An error has occurred adding or updating the content type %type.<br />Please check the errors displayed for more details.', array(
+            '%type' => $imported_type_name
+            )));
+       return;
+    }
+  }
+
+  // Create the groups for this type, if they don't already exist.
+  if (module_exists('fieldgroup') && $imported_groups) {
+    foreach ($imported_groups as $group) {
+      $group_name = $group['group_name'];
+      fieldgroup_save_group($type_name, $group);
+    }
+    // Reset the static variable in fieldgroup_groups() with new data.
+    fieldgroup_groups('', FALSE, TRUE);
+  }
+
+  // Iterate through the field forms in the import and execute each.
+  $rebuild = FALSE;
+  foreach ($imported_fields as $field) {
+
+    // Make sure the field doesn't already exist in the type.
+    // If so, do nothing, fields can't be duplicated within a content type.
+    $field_name   = $field['field_name'];
+
+    // Might need to overwrite the content type name if a new type was created.
+    $field['type_name'] = $type_name;
+
+    // if the field already exists
+    if (!empty($field['field_name']) && isset($content_info['content types'][$type_name]['fields'][$field_name])) {
+      switch ($import_type) {
+        case 'import_update': {
+          $field = content_field_instance_update($field, FALSE);
+          $rebuild = TRUE;
+          drupal_set_message(t('The field %field_label (%field_name) was updated for the content type %type.', array(
+            '%field_label' => $field['widget']['label'], '%field_name' => $field_name, '%type' => $type_label)));
+          break;
+        }
+        case 'import_fields': {
+          drupal_set_message(t('The imported field %field_label (%field_name) was not added to %type because that field already exists in %type.', array(
+            '%field_label' => $field['label'], '%field_name' => $field_name, '%type' => $type_label)));
+          break;
+        }
+      }
+    }
+    else {
+      $field = content_field_instance_create($field, FALSE);
+      $rebuild = TRUE;
+      drupal_set_message(t('The field %field_label (%field_name) was added to the content type %type.', array(
+        '%field_label' => $field['widget']['label'], '%field_name' => $field_name, '%type' => $type_label)));
+    }
+
+    // if we are updating an existing content type
+    // remove the field just processed from the content_info
+    // this way what it is left in the content_info are fields
+    // that have to be removed because no longer present in the content type
+    if ($import_type == 'import_update') {
+      unset($content_info['content types'][$type_name]['fields'][$field_name]);
+    }
+
+    // Fieldgroup module erases all group related data when a module that
+    // provides a content type is disabled, but CCK does not remove the fields.
+    // In this case, we should ensure group data related to fields is properly
+    // restored. Hence, we need to update field group data for newly imported
+    // field, but also for fields that already exist.
+    if (module_exists('fieldgroup') && isset($imported_groups)) {
+      fieldgroup_update_fields($field);
+    }
+  }
+
+  // if we are updating an existing content type
+  if ($import_type == 'import_update') {
+    // let's look for fields to be deleted
+    foreach ($content_info['content types'][$type_name]['fields'] as $field) {
+      content_field_instance_delete($field['field_name'], $type_name, FALSE);
+      drupal_set_message(t('The field %field_label (%field_name) was removed from the content type %type.', array(
+      '%field_label' => $field['widget']['label'], '%field_name' => $field_name, '%type' => $type_label)));
+      $rebuild = TRUE;
+    }
+  }
+
+  // Clear caches and rebuild menu only if any field has been created.
+  if ($rebuild) {
+    content_clear_type_cache(TRUE);
+    menu_rebuild();
+  }
+
+  // Import weights of non-CCK fields.
+  if (isset($content['extra'])) {
+    variable_set('content_extra_weights_'. $type_name, $content['extra']);
+  }
+}
+
+
+/**
+ * Helper function to import a content type from exported code.
+ *
+ * This function is provided to developers who aim at implementing programmatic
+ * CCK content types with a full functional update facility in code.
+ * 
+ * Modelled after the 'cck_sync_import_content' function in the cck_sync module.
+ *
+ * @param $content
+ *   The content type and fields export.
+ * @param $type_name
+ *   If importing into an existing type, pass the content type name along
+ *   and the type will be updated.
+ * @param $require_hooks_execution
+ *   If true, the function below will use drupal_execute to import the content
+ *   type. This is the only way to guarantee the hooks will be fired. Use it if you
+ *   know that on the destination system the form could have been altered by
+ *   hook_form_alter(s).
+ *   If false, the submit function will called directly. No hook will be fired.
+ */
+function alternate_content_copy_import_content($content = array(), $type_name = '<create>', $require_hooks_execution = false) {
+  $form_state = array();
+  $form_state['values']['type_name'] = $type_name;
+  $form_state['values']['macro'] = '$content = '. var_export($content, 1) .';';
+  $form_state['values']['op'] = t('Import');
+
+  if ($require_hooks_execution) {
+    drupal_execute('content_copy_import_form', $form_state);
+  }
+  else {
+    $form = content_copy_import_form($form_state, $type_name);
+    alternate_content_copy_import_form_submit($form, $form_state);
+  }
+
+  content_clear_type_cache();
+}

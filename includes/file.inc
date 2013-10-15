@@ -683,6 +683,7 @@ function file_save_upload($source, $validators = array(), $dest = FALSE, $replac
     $upload_cache[$source] = $file;
     return $file;
   }
+  
   return 0;
 }
 

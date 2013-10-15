@@ -1,0 +1,13 @@
+; $Id: alternate_content_copy.info,v 1.1 2010/04/13 12:47:40 vincenzo Exp $
+name = Alternate Content Copy
+description = Provides an alternative behaviour for the CCK Content Copy import facility.
+dependencies[] = content_copy
+package = CCK
+core = 6.x
+version = "6.x-2.6-beta2"
+; Information added by drupal.org packaging script on 2010-08-11
+version = "6.x-1.0"
+core = "6.x"
+project = "acc"
+datestamp = "1281488188"
+

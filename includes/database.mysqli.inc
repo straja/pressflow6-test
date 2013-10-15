@@ -96,7 +96,7 @@ function db_connect($url) {
  */
 function _db_query($query, $debug = 0, $slave = FALSE) {
   global $active_db, $active_slave_db, $queries, $user;
-
+  
   // Ignore slave database servers for this request.
   //
   // In Drupal's distributed database structure, new data is written to the master

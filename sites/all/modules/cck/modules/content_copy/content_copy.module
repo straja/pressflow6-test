@@ -296,7 +296,7 @@ function content_copy_export($form_values) {
 function content_copy_import_form(&$form_state, $type_name = '') {
   include_once('./'. drupal_get_path('module', 'content') .'/includes/content.admin.inc');
   include_once('./'. drupal_get_path('module', 'node') .'/content_types.inc');
-
+  
   $form['#prefix'] = t('This form will import field definitions exported from another content type or another database.<br/>Note that fields cannot be duplicated within the same content type, so imported fields will be added only if they do not already exist in the selected type.');
   $form['type_name'] = array(
     '#type' => 'select',
@@ -335,7 +335,7 @@ function content_copy_import_form(&$form_state, $type_name = '') {
  */
 function content_copy_import_form_submit($form, &$form_state) {
   $form_values = $form_state['values'];
-
+  
   // Get the content type we are importing into.
   $type_name = $form_values['type_name'];
   $type_label = node_get_types('name', $type_name);

@@ -1,0 +1,13 @@
+<?php
+
+class SliderUnitTestTestCase extends DrupalUnitTestCase {
+    
+    public static function getInfo() {
+        // Note: getInfo() strings should not be translated.
+        return array(
+            'name' => 'Slider Unit Test',
+            'description' => 'Test that Slider works properly',
+            'group' => 'Diwanee'
+        );
+    }
+}

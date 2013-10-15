@@ -113,4 +113,8 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
+#php_value upload_max_filesize 200M
+#php_value post_max_size 200M
+
+
 # $Id$
