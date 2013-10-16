@@ -1,19 +1,21 @@
 /* Slider */
 #slider {
-    min-width:1280px; 
-    min-height:526px;
+    overflow: hidden;
+    margin: 0 auto;
+    width:1280px; 
+    height:526px;
 }
-#mask { 
+#mask {
     position: absolute; 
     width:1280px; 
     height:526px; 
     overflow:hidden;  
 }
-ul#images li.image{ 
-    position:relative; 
-    margin: 0 auto; 
-    max-width:1280px; 
-    max-height:526px; 
+ul#images {
+    margin: 0 auto;
+    position:relative;
+    top: 42px;
+    left: 297px;
     min-height: 526px;
     min-width: 1280px;
     overflow: hidden;
@@ -21,7 +23,9 @@ ul#images li.image{
     list-style-image: none;
 }
 ul#images li.image{ 
-    float:left; 
+    float:left;
+    max-height: 526px;
+    max-width: 1280px;
     position:relative; 
     top:0px;
     left:0px; 
@@ -52,7 +56,9 @@ ul#images li.image{
 }
 
 #arrows {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 1280px;
-    margin: 0 auto;
+    z-index: 20;
 }

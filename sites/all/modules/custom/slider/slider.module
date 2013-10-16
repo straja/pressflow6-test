@@ -30,220 +30,69 @@ function slider_help($path, $arg) {
     return $output;
 } // end slider_help
 
-/*
- * Implementation of hook_node_info()
- * @return array An array of slider node inforamtion
- *
-function slider_node_info() {
-    return array(
-        'slider' => array(
-            'name' => t('Slider Node'),
-            'module' => 'slider',
-            'description' => 'This is a slider content type.',
-        )
-    );
-} // end slider_node_info
-
-/*
- * Valid permissions for this module
- * @return array An array for valid permissions for slider module
+/**
+ * Implementation of hook_block()
  */
-function slider_perm() {
-    return array(
-        'administer slider',
-        'access slider',
-        'create slider',
-        'delete slider',
-        'delete own slider',
-        'edit slider',
-        'edit own slider'
-    );
-} // end slider_perm
-
-/*
- * Implentation of hook_access()
- * sliderimage is the name of the node type
- * @param string $op The operation to be performed
- * @param mixed $node Either a node object or the machine name of the content type
- * on which to be performed access check
- * @param mixed $account The user object to perform the access check operation on
- * $return bool TRUE if operation is to be allowed or FALSE in a case of not allowed
- */
-function slider_access($op, $node, $account) {
-    switch ($op) {
-        case 'create':
-            return user_access('create sliderimage', $account);
-            break;
-        case 'update':
-            return user_access('edit own sliderimage', $account)
-                || (user_access('edit own sliderimage', $account) && ($account->uid == $node->uid)); 
-            break;
-        case 'delete':
-            return user_access('delete own sliderimage', $account)
-                || (user_access('delete own sliderimage', $account) && ($account->uid == $node->uid)); 
-            break;
+function slider_block($op = 'list', $delta = 0) {
+    // Add js and css
+    drupal_add_js(drupal_get_path('module', 'slider') . '/js/slider.js');
+    drupal_add_css(drupal_get_path('module', 'slider') . '/css/slider.css');
+    
+    if ($op == 'list') {
+        // Get the list of nodeblock nodes from database.
+        $result = db_query("SELECT nid FROM {node} WHERE type='sliderimages'");
+        $blocks = array();
+        while ($row = db_fetch_object($result)) {
+            $node = node_load($row->nid);
+            $blocks[$row->nid]['info'] = check_plain($node->title);
+        }
+        return $blocks;
+    } elseif ($op == 'view') {
+        // Don't show on own node page
+        if (arg(0) == 'node' && arg(1) == $delta) {
+            return;
+        }
+        // Load the node if it's published.
+        if ($node = node_load(array('nid' => $delta, 'status' => 1))) {
+            // Don't show nodes in other languages than current. Integration with i18n node languages.
+            //maybe later: global $language;
+            //if (empty($node->language) || $node->language == $language->language) {
+                return array(
+                    'subject' => '',
+                    'content' => sliderimages_block_content($node),
+                );
+            //}
+        }
     }
+ }
+
+ /**
+  * Implementation of block content function
+  * @param type $node
+  * @return type
+  */
+function sliderimages_block_content($node) {
+    $node->build_mode = NODEASBLOCK_BUILD_TEASER;
+    $node = node_build_content($node, TRUE, FALSE);
+    $node->body = drupal_render($node->content);
+    
+    return theme('sliderimages', $node);
 }
 
-/*
- * Implementaion of hook_form()
- * Straja: TODO - ovde umesto bodyja treba ubaciti image field.
- *
-function slider_form(&$node, $form_state) {
-    $type = node_get_types('type', $node);
-    
-    // We need to define elements for nodes title and body
-    $form['title'] = array(
-        '#type' => 'textfield',
-        '#title' => check_plain($type->title_label),
-        '#default_value' => $node->title,
-        '#size' => 60,
-        '#maxlength' => 128,
-        '#weight' => -5,
-        '#ahah["event"]' => 'blur',
-        '#required' => TRUE,
-        '#description' => t('Title of slider image')
-    );
-    
-    $form['slider_image'] = array(
-        '#atributes' => array( 'enctype' => 'multipart/form-data' )
-    );
-    $form['slider_image']['image'] = array(
-        '#type' => 'file',
-        '#size' => 60
-    );
-    
-    $form['slider_image']['submit'] = array(
-        '#value' => t('Upload'),
-        '#type' => 'submit',
-        '#title' => t('Upload'),
-        '#weight' => 1,
-        '#ahah' => array(
-            'event' => 'click',
-            'path' => 'slider/js',
-            'wrapper' => 'edit-image-wrapper',
-            'method' => 'replace',
-            'effect' => 'fade',
-            'progress' => array(
-                'type' => 'bar',
-                'message' => t('Loading...')
-            )
-        )
-    );
-    
-    return $form;
-}
-
-/*
- * Generate HTML for slider block
- * @param string $op one of "list", "view", "save" and "configure"
- * @param integer $delta code to indetify the block
- * @param array $edit only for save operation
- *
-function slider_block($op = 'list', $delta = 0, $edit = array()) {
-    
-    // setup an empty array which will contain the block content
-    $block = array();
-    
-    switch($op){
-        case "list":
-            //Generate listing of blocks from the module, for the admin/block page
-            $block[0]["info"] = t("Slider");
-            break;
-        case "view":
-            //Generate our block content
-            $block_content = "";
-            
-              //TODO: Treba ti query koji vuce kontent type slider image, ali da moze sam da se napise koji da bude u modulu
-            $query = "SELECT nid, title" .
-                     "FROM {node}" .
-                     "WHERE type = %s"; 
-            
-            $type = 'sliderimage'; // ovo nekako namestiti da cita iz textfielda
-            
-            $query_result = db_query($query, $type);
-            // -------------------------------
-            
-            $block_content .= '<ul class="images">';
-            while($links = db_fetch_object($query_result)){
-                $block_content .= '<li>' . t($links->image) . '</li>';
-            }
-            $block_content .= '</ul>'; 
-            
-            //Fill the subject of our block which is the same whether or not
-            //the block has any real content
-            $block['subject'] = t("Slider");
-
-            //Check to see if there is any content before returning the block view
-            if($block_content == ''){
-                //no content
-                $block_content = t("We can put here default image");
-            }
-            
-            break;
-        case "save":
-            break;
-        case "configure":
-            break;
-    }
-    
-    //return the built content
-    return $block;
-} // end slider_block
-
-/*
- * Show slider in administration menu
- * @return $items
- *
-function slider_menu() {
-    $items['admin/slider'] = array(
-        'title' => 'Slider image',
-        'descrpition' => '...',
-        'position' => 'right',
-        'weight' => -5,
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('slider_admin'),
-        'access arguments' => array('administer site configuration'),
-        'file' => 'includes/slider.admin.inc',
-        'type' => MENU_NORMAL_ITEM,
-    );
-    
-    $items['admin/settings/slider'] = array(
-        'title' => 'Slider settings',
-        'description' => 'Description of Slider settings page',
-        'page callback' => 'drupal_get_form',
-        'page arguments' => array('slider_admin_settings'),
-        'access arguments' => array('administer slider settings'),
-        'type' => MENU_NORMAL_ITEM,
-        'file' => 'slider.admin.inc',
-    );
-    
-    $items['slider/js'] = array(
-        'page callback' => 'slider_js',
-        'access arguments' => array('administer slider js'), 
-    );
-    
-    return $items;
-} // end slider_menu
-
-/*
- * Callback function for slider/js
- * The returned HTML will be outputted by AHAH
- *
-function slider_js() {
-    
-    $dest = "sites/default/files/sliderimages";
-    $dir = file_check_directory($dest, FILE_CREATE_DIRECTORY);
-    
-    if(!$dir){
-        $data = t("Can't create directory /sliderimages.");
-    } else {
-        $data = file_save_upload('image', array() , $dest);
-    }
-    
-    $data = t('<img width="100" height="100" src="/' . $data->filepath . '" />');
-    
-    return drupal_json(array('status' => TRUE, 'data' => $data));
-} // end slider_js
+/**
+ * Implementation of hook_theme()
  * 
+ * @param type $existing
+ * @param type $type
+ * @param type $theme
+ * @param type $path
  */
+function slider_theme($existing, $type, $theme, $path) {
+    return array(
+        'sliderimages' => array(
+            'template' => 'templates/node-sliderimages',
+            'arguments' => array(
+                'node' => NULL
+            )
+    ));
+}

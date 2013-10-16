@@ -12,7 +12,7 @@ $(document).ready(function() {
     }
 
     $('ul#images li.image:first-child').addClass('selected');
-    mask.css('width', imgWidth*(lastElem+1) +'px');
+    mask.css('width', imgWidth*(lastElem+1) + 'px');
 
     function sliderResponse(target) {
         mask.stop(true,false).animate({'left':'-'+ imgWidth*target +'px'},300);
