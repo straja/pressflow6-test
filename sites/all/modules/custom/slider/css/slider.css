@@ -1,4 +1,4 @@
-/* Slider */
+
 #slider {
     overflow: hidden;
     margin: 0 auto;
@@ -6,7 +6,8 @@
     height:526px;
 }
 #mask {
-    position: absolute; 
+    margin: 0 auto;
+    position: relative; 
     width:1280px; 
     height:526px; 
     overflow:hidden;  
@@ -15,7 +16,6 @@ ul#images {
     margin: 0 auto;
     position:relative;
     top: 42px;
-    left: 297px;
     min-height: 526px;
     min-width: 1280px;
     overflow: hidden;
@@ -28,7 +28,6 @@ ul#images li.image{
     max-width: 1280px;
     position:relative; 
     top:0px;
-    left:0px; 
     list-style-type: none;
     list-style-image: none;
 }
@@ -41,15 +40,13 @@ ul#images li.image{
     color: #000;
 }
 .prevSlide { 
-    left:0; 
-    top: -307px; 
+    left:0;  
     background: url('../img/slider-left.png') no-repeat; 
     width: 50px; 
     height: 100px; 
 }
 .nextSlide { 
     left:975px; 
-    top: -307px; 
     background: url('../img/slider-right.png') no-repeat; 
     width: 50px; 
     height: 100px; 
@@ -57,8 +54,8 @@ ul#images li.image{
 
 #arrows {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -220px;
+    left: 450px;
     width: 1280px;
     z-index: 20;
 }

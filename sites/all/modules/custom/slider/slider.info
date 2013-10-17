@@ -7,10 +7,6 @@ core = 6.x
 dependencies[] = content
 dependencies[] = content_copy
 dependencies[] = imagefield
-dependencies[] = diwanee_corp_core
-dependencies[] = imagecache
-; dependencies[] = nd
-; dependencies[] = nodequeue
-; dependencies[] = nodereference_field
+; dependencies[] = imagecache
 
 ; files[] = tests/slider.test
