@@ -638,7 +638,7 @@ a {cursor:pointer;}
         margin: 0;
     }
     
-    .sf-menu.sf-style-space a.sf-with-ul {
-        
+    #header .conatiner {
+        overflow-x: hidden;
     }
 }

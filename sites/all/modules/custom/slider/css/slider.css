@@ -59,3 +59,37 @@ ul#images li.image{
     width: 1280px;
     z-index: 20;
 }
+
+@media screen and ( max-width: 640px ) {
+    
+    ul#images li.image,
+    ul#images li.image img {
+        max-height: 303px !important;
+        max-width: 578px !important;
+    }
+    
+    #slider {
+        overflow-x: hidden;
+    }
+    
+    #arrows {
+        position: fixed;
+    }
+    
+    #slider,
+    #arrows {
+        width: 100% !important;
+    }
+    
+    .control {
+        top: 435px;
+    }
+    
+    .prevSlide {
+        left: -435px;
+    }
+    
+    .nextSlide {
+        left: 95px;
+    }
+}
