@@ -111,18 +111,18 @@
       // The rest is crystal clear, isn't it? :)
       switch (mode){
         case 'always_active' :
-          convert(menu);
+          //convert(menu);
         break;
         case 'window_width' :
           if ($(window).width() < options.breakpoint){
-            convert(menu);
+            //convert(menu);
           }
           var timer;
           $(window).resize(function(){
             clearTimeout(timer);
             timer = setTimeout(function(){
               if ($(window).width() < options.breakpoint){
-                convert(menu);
+                //convert(menu);
               }
               else {
                 turnBack(menu);
@@ -134,13 +134,13 @@
           if (options.useragent != ''){
             var ua = RegExp(options.useragent, 'i');
             if (navigator.userAgent.match(ua)){
-              convert(menu);
+              //convert(menu);
             }
           }
         break;
         case 'useragent_predefined' :
           if (navigator.userAgent.match(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od|ad)|iris|kindle|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i)){
-            convert(menu);
+            //convert(menu);
           }
         break;
       }

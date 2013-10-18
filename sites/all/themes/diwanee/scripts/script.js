@@ -46,4 +46,39 @@ $(document).ready(function() {
         $(this).text('Mail');
         $(this).val('Mail');
     });
+    
+    function jsUpdateSize(){
+    // Get the dimensions of the viewport
+        var width = window.innerWidth ||
+                    document.documentElement.clientWidth ||
+                    document.body.clientWidth;
+        console.log(width);
+        var menu = $('.pane-menu-block-1 ul.menu li');
+        var sfHidden = $('.sf-hidden');
+        if(width <= 640){
+            sfHidden.remove();
+            if(menu.length > 2) {
+                //menu.append('<div id="brandPrev"><</div>')
+                //menu.insertBefore('#brandPrev');
+                menu.children().hide();
+                menu.children().slice(0,2).show();
+                if(!$('#brandNext').length){
+                    $('.pane-menu-block-1 ul.menu').parent().append('<div id="brandNext">></div>');
+                } else {
+                    $('#brandNext').show();
+                }
+            }
+        } else {
+            if($('#brandNext').length){
+                $('#brandNext').hide();
+            }
+            menu.children().show();
+        }
+    };
+    window.onload = jsUpdateSize;       // When the page first loads
+    window.onresize = jsUpdateSize;     // When the browser changes size
+    
+    $("#drandMenuArrow").click(function(){
+        //TODO
+    });
 });
