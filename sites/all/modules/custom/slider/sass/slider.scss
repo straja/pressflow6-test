@@ -1,4 +1,3 @@
-/* line 1, ../sass/slider.scss */
 #slider {
   overflow: hidden;
   margin: 0 auto;
@@ -6,7 +5,6 @@
   height: 526px;
 }
 
-/* line 8, ../sass/slider.scss */
 #mask {
   margin: 0 auto;
   position: relative;
@@ -15,7 +13,6 @@
   overflow: hidden;
 }
 
-/* line 16, ../sass/slider.scss */
 ul#images {
   margin: 0 auto;
   position: relative;
@@ -25,19 +22,17 @@ ul#images {
   overflow: hidden;
   list-style-type: none;
   list-style-image: none;
-}
-/* line 25, ../sass/slider.scss */
-ul#images li.image {
-  float: left;
-  max-height: 526px;
-  max-width: 1280px;
-  position: relative;
-  top: 0px;
-  list-style-type: none;
-  list-style-image: none;
+  li.image {
+    float: left;
+    max-height: 526px;
+    max-width: 1280px;
+    position: relative;
+    top: 0px;
+    list-style-type: none;
+    list-style-image: none;
+  }
 }
 
-/* line 36, ../sass/slider.scss */
 .control {
   position: absolute;
   top: 335px;
@@ -46,23 +41,20 @@ ul#images li.image {
   color: #000;
 }
 
-/* line 44, ../sass/slider.scss */
 .prevSlide {
   left: 0;
-  background: url("../img/slider-left.png") no-repeat;
+  background: url('../img/slider-left.png') no-repeat;
   width: 50px;
   height: 100px;
 }
 
-/* line 51, ../sass/slider.scss */
 .nextSlide {
   left: 975px;
-  background: url("../img/slider-right.png") no-repeat;
+  background: url('../img/slider-right.png') no-repeat;
   width: 50px;
   height: 100px;
 }
 
-/* line 58, ../sass/slider.scss */
 #arrows {
   position: absolute;
   top: -220px;
@@ -72,43 +64,29 @@ ul#images li.image {
 }
 
 @media screen and (max-width: 640px) {
-  /* line 67, ../sass/slider.scss */
   ul#images li.image {
     max-height: 303px !important;
     max-width: 578px !important;
+    img {
+      max-height: 303px !important;
+      max-width: 578px !important;
+    }
   }
-  /* line 70, ../sass/slider.scss */
-  ul#images li.image img {
-    max-height: 303px !important;
-    max-width: 578px !important;
-  }
-
-  /* line 75, ../sass/slider.scss */
   #slider {
     overflow-x: hidden;
   }
-
-  /* line 78, ../sass/slider.scss */
   #arrows {
     position: fixed;
   }
-
-  /* line 81, ../sass/slider.scss */
   #slider, #arrows {
     width: 100% !important;
   }
-
-  /* line 84, ../sass/slider.scss */
   .control {
     top: 435px;
   }
-
-  /* line 87, ../sass/slider.scss */
   .prevSlide {
     left: -435px;
   }
-
-  /* line 90, ../sass/slider.scss */
   .nextSlide {
     left: 95px;
   }
